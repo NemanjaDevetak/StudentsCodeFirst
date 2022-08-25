@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace Domain.Service
 {
-    public interface IStudentRepository
+    public interface IStudentRepository : IBaseRepository<Student>
     {
-        void AddCourse(Course course);
+
     }
 }

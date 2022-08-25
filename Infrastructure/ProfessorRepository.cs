@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace Domain.Infrastructure
 {
-    public class DepartmentRepository : BaseRepository<Department>, IDepartmentRepository
+    public class ProfessorRepository : BaseRepository<Professor>, IProfessorRepository
     {
-        public DepartmentRepository(ApplicationDbContext context) : base(context)
+        public ProfessorRepository(ApplicationDbContext context) : base(context)
         {
 
         }

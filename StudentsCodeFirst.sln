@@ -9,9 +9,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Persistence", "Persistance\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain.Service", "Domain.Service\Domain.Service.csproj", "{969B3D0F-7EC1-4B08-BCAE-3D3C2E9AF1C5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain.Infrastructure", "Infrastructure\Domain.Infrastructure.csproj", "{20CD64A7-2298-49FF-9513-AD95FF38184B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain.Infrastructure", "Infrastructure\Domain.Infrastructure.csproj", "{20CD64A7-2298-49FF-9513-AD95FF38184B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\Application.csproj", "{48F5BCAF-38A0-4731-B34E-35CCAF84E8E8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "Application\Application.csproj", "{48F5BCAF-38A0-4731-B34E-35CCAF84E8E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.Infrastructure", "Application.Infrastructure\Application.Infrastructure.csproj", "{8079655B-0492-4CF6-8290-B6D454A62934}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.Service", "Application.Service\Application.Service.csproj", "{D32B637A-B197-4307-AF4E-DC0D4607E1F7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +43,14 @@ Global
 		{48F5BCAF-38A0-4731-B34E-35CCAF84E8E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48F5BCAF-38A0-4731-B34E-35CCAF84E8E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{48F5BCAF-38A0-4731-B34E-35CCAF84E8E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8079655B-0492-4CF6-8290-B6D454A62934}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8079655B-0492-4CF6-8290-B6D454A62934}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8079655B-0492-4CF6-8290-B6D454A62934}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8079655B-0492-4CF6-8290-B6D454A62934}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D32B637A-B197-4307-AF4E-DC0D4607E1F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D32B637A-B197-4307-AF4E-DC0D4607E1F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D32B637A-B197-4307-AF4E-DC0D4607E1F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D32B637A-B197-4307-AF4E-DC0D4607E1F7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

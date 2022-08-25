@@ -15,6 +15,9 @@ namespace Infrastructure.Domain
         private ApplicationDbContext context = new ApplicationDbContext();
         private IBaseRepository<BaseEntity> baseRepository;
         private ICourseRepository courseRepository;
+        private IDepartmentRepository departmentRepository;
+        private IProfessorRepository professorRepository;
+        private IStudentRepository studentRepository;
         public IBaseRepository<BaseEntity> BaseRepository
         {
             get
@@ -37,6 +40,42 @@ namespace Infrastructure.Domain
                     this.courseRepository = new CourseRepository(context);
                 }
                 return courseRepository;
+            }
+        }
+        public IDepartmentRepository DepartmentRepository
+        {
+            get
+            {
+
+                if (this.departmentRepository == null)
+                {
+                    this.departmentRepository = new DepartmentRepository(context);
+                }
+                return departmentRepository;
+            }
+        }
+        public IProfessorRepository ProfessorRepository
+        {
+            get
+            {
+
+                if (this.professorRepository == null)
+                {
+                    this.professorRepository = new ProfessorRepository(context);
+                }
+                return professorRepository;
+            }
+        }
+        public IStudentRepository StudentRepository
+        {
+            get
+            {
+
+                if (this.studentRepository == null)
+                {
+                    this.studentRepository = new StudentRepository(context);
+                }
+                return studentRepository;
             }
         }
 

@@ -49,7 +49,7 @@ namespace Domain.Models
         public string ZipCode { get; private set; }
         public string Street { get; private set; }
 
-        public Address CreateInstance(string country, string city, string zipCode, string street) {
+        public static Address CreateInstance(string country, string city, string zipCode, string street) {
             return new Address(country, city, zipCode, street);
         }
 

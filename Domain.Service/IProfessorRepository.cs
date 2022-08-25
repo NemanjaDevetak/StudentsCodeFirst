@@ -9,6 +9,5 @@ namespace Domain.Service
 {
     public interface IProfessorRepository : IBaseRepository<Professor>
     {
-        void AddCourse(Course course);
     }
 }

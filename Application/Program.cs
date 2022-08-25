@@ -3,10 +3,11 @@ using Infrastructure.Domain;
 
 UnitOfWork uof = new();
 
-Course c = new();
-c.CreatedAt = DateTime.Now;
-c.Code = "12345";
-c.CourseName = "Software architecture";
+var s = uof.StudentRepository.GetById(1);
+var p = uof.ProfessorRepository.GetById(1);
+var c = uof.CourseRepository.GetById(1);
 
-uof.CourseRepository.Insert(c);
+uof.CourseRepository.AddProfessor(c, p);
+uof.CourseRepository.AddStudent(c, s);
+
 uof.Save();
