@@ -4,6 +4,7 @@ using Persistence.Configurations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -26,12 +27,18 @@ namespace Persistence
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=DESKTOP-0N88TA5;Database=Task02;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Server=DESKTOP-0N88TA5;Database=Task04;Trusted_Connection=True;");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(BaseConfiguration<>).Assembly);
+            //modelBuilder.ApplyConfigurationsFromAssembly(typeof(BaseConfiguration<>).Assembly);
+            modelBuilder.ApplyConfiguration(new CourseConfiguration());
+            modelBuilder.ApplyConfiguration(new DepartmentConfiguration());
+            modelBuilder.ApplyConfiguration(new ProfessorConfiguration());
+            modelBuilder.ApplyConfiguration(new CoursesProfessorConfiguration());
+            modelBuilder.ApplyConfiguration(new StudentConfiguration());
+            modelBuilder.ApplyConfiguration(new StudentCoursesConfiguration());
         }
     }
 }

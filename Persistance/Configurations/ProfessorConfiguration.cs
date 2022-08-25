@@ -9,22 +9,26 @@ using System.Threading.Tasks;
 
 namespace Persistence.Configurations
 {
-    public class ProfessorConfiguration : BaseConfiguration<Professor>
+    public class ProfessorConfiguration : BaseConfiguration<Professor>, IEntityTypeConfiguration<Professor>
     {
-        public void Configure(EntityTypeBuilder<Professor> entity)
+        public override void Configure(EntityTypeBuilder<Professor> entity)
         {
+            base.Configure(entity);
 
-            entity.Property(e => e.City);
+            entity.HasKey(e => e.Id);
 
-            entity.Property(e => e.Country);
+            entity.Property(e => e.FirstName).IsRequired().HasMaxLength(64); ;
 
-            entity.Property(e => e.FirstName);
+            entity.Property(e => e.LastName).IsRequired().HasMaxLength(64); ;
 
-            entity.Property(e => e.LastName);
-
-            entity.Property(e => e.Street);
-
-            entity.Property(e => e.ZipCode);
+            entity
+                .OwnsOne(e => e.Address, sb =>
+            {
+                sb.Property(x => x.Country).HasDefaultValue(string.Empty);
+                sb.Property(x => x.City).HasDefaultValue(string.Empty);
+                sb.Property(x => x.ZipCode).HasDefaultValue(string.Empty);
+                sb.Property(x => x.Street).HasDefaultValue(string.Empty);
+            });
         }
     }
 }

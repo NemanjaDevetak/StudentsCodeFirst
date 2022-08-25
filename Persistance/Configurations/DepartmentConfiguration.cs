@@ -9,11 +9,12 @@ using System.Threading.Tasks;
 
 namespace Persistence.Configurations
 {
-    public class DepartmentConfiguration : BaseConfiguration<Department>
+    public class DepartmentConfiguration : BaseConfiguration<Department>, IEntityTypeConfiguration<Department>
     {
-        public void Configure(EntityTypeBuilder<Department> entity)
+        public override void Configure(EntityTypeBuilder<Department> entity)
         {
-            entity.Property(e => e.DeptartmentName);
+            base.Configure(entity);
+            entity.Property(e => e.DeptartmentName).IsRequired().HasMaxLength(64);
         }
     }
 }

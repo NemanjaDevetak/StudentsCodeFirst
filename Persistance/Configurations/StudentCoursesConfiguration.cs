@@ -9,10 +9,11 @@ using System.Threading.Tasks;
 
 namespace Persistence.Configurations
 {
-    public class StudentCoursesConfiguration : BaseConfiguration<StudentCourses>
+    public class StudentCoursesConfiguration : BaseConfiguration<StudentCourses>, IEntityTypeConfiguration<StudentCourses>
     {
-        public void Configure(EntityTypeBuilder<StudentCourses> entity)
+        public override void Configure(EntityTypeBuilder<StudentCourses> entity)
         {
+            base.Configure(entity);
 
             entity.Property(e => e.CourseId);
 
@@ -22,11 +23,13 @@ namespace Persistence.Configurations
 
             entity.HasOne(d => d.Course)
                 .WithMany(p => p.StudentCourses)
-                .HasForeignKey(d => d.CourseId);
+                .HasForeignKey(d => d.CourseId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
 
             entity.HasOne(d => d.Student)
                 .WithMany(p => p.StudentCourses)
-                .HasForeignKey(d => d.StudentId);
+                .HasForeignKey(d => d.StudentId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
         }
     }
 }

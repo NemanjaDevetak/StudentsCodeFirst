@@ -11,9 +11,9 @@ namespace Persistence.Configurations
 {
     public abstract class BaseConfiguration<T> : IEntityTypeConfiguration<T> where T : BaseEntity
     {
-        public void Configure(EntityTypeBuilder<T> entity)
+        public virtual void Configure(EntityTypeBuilder<T> entity)
         {
-            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+            entity.HasKey(e => e.Id);
             entity.Property(e => e.CreatedAt).IsRequired();
         }
     }
