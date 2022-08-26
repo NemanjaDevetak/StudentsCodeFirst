@@ -1,13 +1,14 @@
-﻿using Domain.Models;
+﻿using Application.Infrastructure;
+using Application.Service;
+using Application.Service.Dtos;
+using Domain.Models;
 using Infrastructure.Domain;
 
-UnitOfWork uof = new();
+ICourseService courseService = new CourseService();
 
-var s = uof.StudentRepository.GetById(1);
-var p = uof.ProfessorRepository.GetById(1);
-var c = uof.CourseRepository.GetById(1);
+UpdateCourseDto course = new();
+course.Id = 3;
+course.Code = "321";
+course.CourseName = "Test";
 
-uof.CourseRepository.AddProfessor(c, p);
-uof.CourseRepository.AddStudent(c, s);
-
-uof.Save();
+await courseService.UpdateCourse(course);

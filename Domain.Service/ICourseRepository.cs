@@ -9,7 +9,7 @@ namespace Domain.Service
 {
     public interface ICourseRepository : IBaseRepository<Course>
     {
-        void AddProfessor(Course course, Professor professor);
-        void AddStudent(Course course, Student student);
+        Task AddProfessor(Course course, Professor professor);
+        Task AddStudent(Course course, Student student);
     }
 }

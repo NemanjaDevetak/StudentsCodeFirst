@@ -11,10 +11,10 @@ namespace Domain.Service
 {
     public interface IBaseRepository<T> where T : BaseEntity
     {
-        IEnumerable<T> GetAll();
-        T GetById(int id);
-        void Insert(T entity);
-        void Update(T entity);
-        void Delete(int id);
+        Task<IEnumerable<T>> GetAll();
+        Task<T> GetById(int id);
+        Task Insert(T entity);
+        Task Update(T entity);
+        Task Delete(int id);
     }
 }

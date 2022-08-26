@@ -15,14 +15,14 @@ namespace Domain.Infrastructure
         {
         }
 
-        public void AddProfessor(Course course, Professor professor)
+        public async Task AddProfessor(Course course, Professor professor)
         {
-            context.CoursesProfessors.Add(new CoursesProfessors { Course = course, Professor = professor });
+            context.CoursesProfessors.AddAsync(new CoursesProfessors { Course = course, Professor = professor });
         }
 
-        public void AddStudent(Course course, Student student)
+        public async Task AddStudent(Course course, Student student)
         {
-            context.StudentCourses.Add(new StudentCourses { Course = course, Student = student });
+            context.StudentCourses.AddAsync(new StudentCourses { Course = course, Student = student });
         }
     }
 }

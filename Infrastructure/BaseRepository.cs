@@ -20,28 +20,28 @@ namespace Domain.Infrastructure
             this.dbSet = context.Set<T>();
         }
 
-        public void Delete(int id)
+        public async Task Delete(int id)
         {
-            var entity = dbSet.Find(id);
+            var entity = await dbSet.FindAsync(id);
             this.dbSet.Remove(entity);
         }
 
-        public IEnumerable<T> GetAll()
+        public async Task<IEnumerable<T>> GetAll()
         {
-            return this.dbSet.ToList();
+            return await this.dbSet.ToListAsync();
         }
 
-        public T GetById(int id)
+        public async Task <T> GetById(int id)
         {
-            return this.dbSet.Find(id);
+            return await this.dbSet.FindAsync(id);
         }
 
-        public void Insert(T entity)
+        public async Task Insert(T entity)
         {
-            this.dbSet.Add(entity);
+            await this.dbSet.AddAsync(entity);
         }
 
-        public void Update(T entity)
+        public async Task Update(T entity)
         {
             this.dbSet.Update(entity);
         }

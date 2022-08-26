@@ -10,8 +10,13 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Domain
 {
-    public class UnitOfWork : IDisposable
+    public class UnitOfWork : IUnitOfWork
     {
+        public UnitOfWork(ApplicationDbContext context)
+        {
+            this.context = context;
+        }
+
         private ApplicationDbContext context = new ApplicationDbContext();
         private IBaseRepository<BaseEntity> baseRepository;
         private ICourseRepository courseRepository;
@@ -79,9 +84,9 @@ namespace Infrastructure.Domain
             }
         }
 
-        public void Save()
+        public async Task Save()
         {
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
         private bool disposed = false;
