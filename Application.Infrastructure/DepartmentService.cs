@@ -1,5 +1,7 @@
 ﻿using Application.Service;
 using Application.Service.Dtos;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Domain.Models;
 using Infrastructure.Domain;
 using Microsoft.EntityFrameworkCore;
@@ -14,19 +16,18 @@ namespace Application.Infrastructure
 {
     public class DepartmentService : IDepartmantService
     {
+        public readonly IMapper mapper;
         private readonly UnitOfWork uof;
         ApplicationDbContext context = new ApplicationDbContext();
 
-        public DepartmentService()
+        public DepartmentService(IMapper mapper)
         {
+            this.mapper = mapper;
             uof = new UnitOfWork(context);
         }
-        public async Task AddDepartment(InsertDepartmentDto dto)
+        public async Task AddDepartment(InsertDepartmentDto insertDepartmentDto)
         {
-            Department newDepartment = new Department();
-            newDepartment.DeptartmentName = dto.DepartmentName;
-
-            await uof.DepartmentRepository.Insert(newDepartment);
+            await uof.DepartmentRepository.Insert((mapper.Map<Department>(insertDepartmentDto)));
             await uof.Save();
         }
 
@@ -38,28 +39,25 @@ namespace Application.Infrastructure
 
         public async Task<GetDepartmentDto> GetDepartmentById(int id)
         {
-            return await context.Departments.Select(x => new GetDepartmentDto
-            {
-                Id = x.Id,
-                DepartmentName = x.DeptartmentName
-            }).FirstOrDefaultAsync(x => x.Id == id);
+            var department = await context.Departments.Where(x => x.Id == id).ProjectTo<GetDepartmentDto>(mapper.ConfigurationProvider).FirstOrDefaultAsync();
+
+            return department;
         }
 
-        public async Task<IEnumerable<GetDepartmentDto>> GetDepartments()
+        public async Task<IEnumerable<GetDepartmentDto>> GetDepartments(int page)
         {
-            return await context.Departments.Select(x => new GetDepartmentDto
-            {
-                Id = x.Id,
-                DepartmentName = x.DeptartmentName
-            }).ToListAsync();
+            var pageResults = 3f;
+            var pageCount = Math.Ceiling(context.Courses.Count() / pageResults);
+
+            var departments = await context.Departments.ProjectTo<GetDepartmentDto>(mapper.ConfigurationProvider).ToListAsync();
+
+            return departments;
         }
 
-        public async Task UpdateDepartment(UpdateDepartmentDto course)
+        public async Task UpdateDepartment(UpdateDepartmentDto department)
         {
-            Department newDepartment = new Department();
-            newDepartment.DeptartmentName = course.DepartmentName;
-
-            await uof.DepartmentRepository.Update(newDepartment);
+            await uof.DepartmentRepository.Update(mapper.Map<Department>(department));
+            await uof.Save();
         }
     }
 }

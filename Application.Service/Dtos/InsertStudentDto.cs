@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Application.Service.Dtos
 {
-    public class GetProfessorDto
+    public class InsertStudentDto
     {
-        public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public AddressDto Address { get; set; }
     }
 }

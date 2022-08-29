@@ -14,5 +14,6 @@ namespace Domain.Service
         IDepartmentRepository DepartmentRepository { get; }
         IProfessorRepository ProfessorRepository { get; }
         IStudentRepository StudentRepository { get; }
+        Task Save();
     }
 }

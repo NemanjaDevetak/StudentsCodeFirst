@@ -10,12 +10,12 @@ namespace Application.Service
 {
     public interface ICourseService
     {
-        Task<IEnumerable<GetCourseDto>> GetCourses();
+        Task<IEnumerable<GetCourseDto>> GetCourses(int page);
         Task<GetCourseDto> GetCourseById(int id);
         Task UpdateCourse(UpdateCourseDto course);
         Task AddCourse(InsertCourseDto course);
         Task DeleteCourse(int id);
         Task AddProfessor(CourseDto course, ProfessorDto professor);
-        Task AddStudent(Course course, Student student);
+        Task AddStudent(CourseDto course, StudentDto student);
     }
 }

@@ -9,10 +9,11 @@ namespace Application.Service
 {
     public interface IProfessorService
     {
-        Task<IEnumerable<GetProfessorDto>> GetProfessors();
-        Task<GetProfessorDto> GetProfessorById(int id);
-        Task UpdateProfessor(UpdateProfessorDto course);
-        Task AddCourse(InsertProfessorDto course);
-        Task DeleteCourse(int id);
+        Task<IEnumerable<GetProfessorDto>> GetProfessors(int page, int pageSize, int? courseId);
+        Task<GetProfessorDto> GetProfessor(int id);
+        Task<GetProfessorDto> GetProfessor(string firstName);
+        Task UpdateProfessor(UpdateProfessorDto professor);
+        Task AddProfessor(InsertProfessorDto professor);
+        Task DeleteProfessor(int id);
     }
 }

@@ -1,5 +1,7 @@
 ﻿using Application.Service;
 using Application.Service.Dtos;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Domain.Models;
 using Domain.Service;
 using Infrastructure.Domain;
@@ -15,47 +17,37 @@ namespace Application.Infrastructure
 {
     public class CourseService : ICourseService
     {
-        private readonly UnitOfWork uof;
+        public readonly IMapper mapper;
+        private readonly IUnitOfWork uof;
         ApplicationDbContext context = new ApplicationDbContext();
 
-        public CourseService()
+        public CourseService(IMapper mapper)
         {
+            this.mapper = mapper;
             uof = new UnitOfWork(context);
         }
-        public async Task AddCourse(InsertCourseDto dto)
+        public async Task AddCourse(InsertCourseDto inserCourseDto)
         {
-            Course newCourse = new Course();
-            newCourse.Code = dto.Code;
-            newCourse.CourseName = dto.CourseName;
-
-            await uof.CourseRepository.Insert(newCourse);
+            await uof.CourseRepository.Insert(mapper.Map<Course>(inserCourseDto));
             await uof.Save();
         }
 
         public async Task AddProfessor(CourseDto courseDto, ProfessorDto professorDto)
         {
-            Course newCourse = await context.Courses.Select(x => new Course
-            {
-                Id = x.Id,
-                Code = x.Code,
-                CourseName = x.CourseName
-            }).FirstOrDefaultAsync(x => x.Id == courseDto.Id);
+            var course = await uof.CourseRepository.GetById(courseDto.Id);
+            var professor = await uof.ProfessorRepository.GetById(professorDto.Id);
 
-            Professor newProfessor = await context.Professors.Select(x => new Professor
-            {
-                Id = x.Id,
-                FirstName = x.FirstName,
-                LastName = x.LastName,
-                Address = Address.CreateInstance(x.Address.Country, x.Address.City, x.Address.ZipCode, x.Address.Street)
-            }).FirstOrDefaultAsync(x => x.Id == professorDto.Id);
-
-            await uof.CourseRepository.AddProfessor(newCourse, newProfessor);
+            await uof.CourseRepository.AddProfessor(course, professor);
             await uof.Save();
         }
 
-        public async Task AddStudent(Course course, Student student)
+        public async Task AddStudent(CourseDto courseDto, StudentDto studentDto)
         {
-            throw new NotImplementedException();
+            var course = await uof.CourseRepository.GetById(courseDto.Id);
+            var student = await uof.StudentRepository.GetById(studentDto.Id);
+
+            await uof.CourseRepository.AddStudent(course, student);
+            await uof.Save();
         }
 
         public async Task DeleteCourse(int id)
@@ -66,31 +58,24 @@ namespace Application.Infrastructure
 
         public async Task<GetCourseDto> GetCourseById(int id)
         {
-            return await context.Courses.Select(x => new GetCourseDto
-            {
-                Id = x.Id,
-                Code = x.Code,
-                CourseName = x.CourseName
-            }).FirstOrDefaultAsync(x => x.Id == id);
+            var course = await context.Courses.Where(x => x.Id == id).ProjectTo<GetCourseDto>(mapper.ConfigurationProvider).FirstOrDefaultAsync();
+
+            return course;
         }
 
-        public async Task<IEnumerable<GetCourseDto>> GetCourses()
+        public async Task<IEnumerable<GetCourseDto>> GetCourses(int page)
         {
-            return await context.Courses.Select(x => new GetCourseDto
-            {
-                Id = x.Id,
-                Code = x.Code,
-                CourseName = x.CourseName
-            }).ToListAsync();
+            var pageResults = 3f;
+            var pageCount = Math.Ceiling(context.Courses.Count() / pageResults);
+
+            var courses = await context.Courses.ProjectTo<GetCourseDto>(mapper.ConfigurationProvider).ToListAsync();
+
+            return courses;
         }
 
         public async Task UpdateCourse(UpdateCourseDto course)
         {
-            Course newCourse = new Course();
-            newCourse.Code = course.Code;
-            newCourse.CourseName = course.CourseName;
-
-            await uof.CourseRepository.Update(newCourse);
+            await uof.CourseRepository.Update(mapper.Map<Course>(course));
             await uof.Save();
         }
     }

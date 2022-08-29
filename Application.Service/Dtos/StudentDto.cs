@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Application.Service.Dtos
 {
-    public class UpdateDepartmentDto
+    public class StudentDto
     {
         public int Id { get; set; }
-        public string DepartmentName { get; set; }
     }
 }

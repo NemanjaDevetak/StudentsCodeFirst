@@ -1,14 +1,24 @@
 ﻿using Application.Infrastructure;
 using Application.Service;
 using Application.Service.Dtos;
+using AutoMapper;
 using Domain.Models;
 using Infrastructure.Domain;
 
-ICourseService courseService = new CourseService();
+var config = new MapperConfiguration(cfg =>
+{
+    cfg.AddProfile(new MapperService());
+});
 
-UpdateCourseDto course = new();
-course.Id = 3;
-course.Code = "321";
-course.CourseName = "Test";
 
-await courseService.UpdateCourse(course);
+
+IMapper mapper = config.CreateMapper();
+
+ICourseService courseService = new CourseService(mapper);
+StudentDto studentDto = new();
+CourseDto courseDto = new();
+
+studentDto.Id = 3;
+courseDto.Id = 9;
+
+await courseService.AddStudent(courseDto, studentDto);

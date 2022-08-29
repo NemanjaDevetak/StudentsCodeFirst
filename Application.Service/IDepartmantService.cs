@@ -9,7 +9,7 @@ namespace Application.Service
 {
     public interface IDepartmantService
     {
-        Task<IEnumerable<GetDepartmentDto>> GetDepartments();
+        Task<IEnumerable<GetDepartmentDto>> GetDepartments(int page);
         Task<GetDepartmentDto> GetDepartmentById(int id);
         Task UpdateDepartment(UpdateDepartmentDto course);
         Task AddDepartment(InsertDepartmentDto course);
