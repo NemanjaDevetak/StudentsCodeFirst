@@ -1,5 +1,7 @@
 ﻿using Application.Service;
 using Application.Service.Dtos;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Domain.Models;
 using Infrastructure.Domain;
 using Microsoft.EntityFrameworkCore;
@@ -14,21 +16,18 @@ namespace Application.Infrastructure
 {
     public class ProfessorService : IProfessorService
     {
+        public readonly IMapper mapper;
         private readonly UnitOfWork uof;
         ApplicationDbContext context = new ApplicationDbContext();
 
-        public ProfessorService()
+        public ProfessorService(IMapper mapper)
         {
+            this.mapper = mapper;
             uof = new UnitOfWork(context);
         }
         public async Task AddProfessor(InsertProfessorDto professor)
         {
-            Professor newProfessor = new Professor();
-            newProfessor.FirstName = professor.FirstName;
-            newProfessor.FirstName = professor.LastName;
-            newProfessor.Address = Address.CreateInstance(professor.Address.Country, professor.Address.City, professor.Address.ZipCode, professor.Address.Street);
-
-            await uof.ProfessorRepository.Insert(newProfessor);
+            await uof.ProfessorRepository.Insert(mapper.Map<Professor>(professor));
             await uof.Save();
         }
 
@@ -40,22 +39,16 @@ namespace Application.Infrastructure
 
         public async Task<GetProfessorDto> GetProfessor(int id)
         {
-            return await context.Professors.Select(x => new GetProfessorDto
-            {
-                Id = x.Id,
-                FirstName = x.FirstName,
-                LastName = x.LastName
-            }).FirstOrDefaultAsync(x => x.Id == id);
+            var professor = await context.Professors.Where(x => x.Id == id).ProjectTo<GetProfessorDto>(mapper.ConfigurationProvider).FirstOrDefaultAsync();
+
+            return professor;
         }
 
         public async Task<GetProfessorDto> GetProfessor(string firstName)
         {
-            return await context.Professors.Select(x => new GetProfessorDto
-            {
-                Id = x.Id,
-                FirstName = x.FirstName,
-                LastName = x.LastName
-            }).FirstOrDefaultAsync(x => x.FirstName == firstName);
+            var professor = await context.Professors.Where(x => x.FirstName == firstName).ProjectTo<GetProfessorDto>(mapper.ConfigurationProvider).FirstOrDefaultAsync();
+
+            return professor;
         }
 
         public async Task<IEnumerable<GetProfessorDto>> GetProfessors(int page, int pageSize = 20, int? courseId = null)
@@ -69,27 +62,14 @@ namespace Application.Infrastructure
 
             var pageCount = Math.Ceiling((decimal)context.Professors.Count() / pageSize);
 
-            IEnumerable<GetProfessorDto> professors = await query.Select(x => new GetProfessorDto
-            {
-                Id = x.Id,
-                FirstName = x.FirstName,
-                LastName = x.LastName
-            })
-                .Skip((page - 1) * (int)pageSize)
-                .Take((int)pageSize)
-                .ToListAsync();
+            IEnumerable<GetProfessorDto> professors = await query.ProjectTo<GetProfessorDto>(mapper.ConfigurationProvider).ToListAsync();
 
             return professors;
         }
 
         public async Task UpdateProfessor(UpdateProfessorDto professor)
         {
-            Professor newProfessor = await uof.ProfessorRepository.GetById(professor.Id);
-            newProfessor.FirstName = professor.FirstName;
-            newProfessor.LastName = professor.LastName;
-            newProfessor.Address = Address.CreateInstance(professor.Address.Country, professor.Address.City, professor.Address.ZipCode, professor.Address.Street);
-
-            await uof.ProfessorRepository.Update(newProfessor);
+            await uof.ProfessorRepository.Update(mapper.Map<Professor>(professor));
             await uof.Save();
         }
     }

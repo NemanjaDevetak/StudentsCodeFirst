@@ -25,6 +25,11 @@ namespace Application.Infrastructure
             CreateMap<Student, GetStudentDto>().ReverseMap();
             CreateMap<Student, InsertStudentDto>().ReverseMap();
             CreateMap<Student, UpdateStudentDto>().ReverseMap();
+            CreateMap<AddressDto, Address>()
+                .ForCtorParam("country", opt => opt.MapFrom(src => src.Country))
+                .ForCtorParam("city", opt => opt.MapFrom(src => src.City))
+                .ForCtorParam("street", opt => opt.MapFrom(src => src.Street))
+                .ForCtorParam("zipcode", opt => opt.MapFrom(src => src.ZipCode));
         }
     }
 }
