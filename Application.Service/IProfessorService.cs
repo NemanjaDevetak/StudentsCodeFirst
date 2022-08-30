@@ -9,7 +9,7 @@ namespace Application.Service
 {
     public interface IProfessorService
     {
-        Task<IEnumerable<GetProfessorDto>> GetProfessors(int page, int pageSize, int? courseId);
+        Task<ResponsePage<GetProfessorDto>> GetProfessors(int page, int pageSize, int? courseId, string? firstName, string? lastName);
         Task<GetProfessorDto> GetProfessor(int id);
         Task<GetProfessorDto> GetProfessor(string firstName);
         Task UpdateProfessor(UpdateProfessorDto professor);

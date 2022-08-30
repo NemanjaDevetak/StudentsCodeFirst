@@ -12,7 +12,7 @@ namespace Domain.Models
         {
             Courses = new HashSet<Course>();
         }
-        public string DeptartmentName { get; set; }
+        public string DepartmentName { get; set; }
 
         public virtual ICollection<Course> Courses { get; set; }
     }

@@ -19,6 +19,8 @@ namespace Persistence.Configurations
 
             entity.Property(e => e.LastName).IsRequired().HasMaxLength(64);
 
+            entity.Property(e => e.StudentIndex).HasMaxLength(64);
+
             entity
                 .OwnsOne(e => e.Address, sb =>
             {

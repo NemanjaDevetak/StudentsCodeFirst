@@ -3,6 +3,7 @@ using Application.Service.Dtos;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Domain.Models;
+using Domain.Service;
 using Infrastructure.Domain;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -17,25 +18,26 @@ namespace Application.Infrastructure
     public class StudentService : IStudentService
     {
         public readonly IMapper mapper;
-        private readonly UnitOfWork uof;
-        ApplicationDbContext context = new ApplicationDbContext();
+        private readonly IUnitOfWork unitOfWork;
+        ApplicationDbContext context;
 
-        public StudentService(IMapper mapper)
+        public StudentService(ApplicationDbContext context, IUnitOfWork unitOfWork, IMapper mapper)
         {
+            this.context = context;
             this.mapper = mapper;
-            uof = new UnitOfWork(context);
+            this.unitOfWork = unitOfWork;
         }
 
         public async Task AddStudent(InsertStudentDto student)
         {
-            await uof.StudentRepository.Insert(mapper.Map<Student>(student));
-            await uof.Save();
+            await unitOfWork.StudentRepository.Insert(mapper.Map<Student>(student));
+            await unitOfWork.Save();
         }
 
         public async Task DeleteStudent(int id)
         {
-            await uof.StudentRepository.Delete(id);
-            await uof.Save();
+            await unitOfWork.StudentRepository.Delete(id);
+            await unitOfWork.Save();
         }
 
         public async Task<GetStudentDto> GetStudent(int id)
@@ -52,7 +54,7 @@ namespace Application.Infrastructure
             return student;
         }
 
-        public async Task<IEnumerable<GetStudentDto>> GetStudents(int page, int pageSize = 20, int? courseId = null)
+        public async Task<ResponsePage<GetStudentDto>> GetStudents(int page, int pageSize = 20, int? courseId = null, string? firstName = null, string? lastName = null)
         {
             var query = context.Students.AsQueryable();
 
@@ -61,17 +63,34 @@ namespace Application.Infrastructure
                 query = query.Where(x => x.StudentCourses.Any(y => y.CourseId == courseId));
             }
 
+            if (String.IsNullOrWhiteSpace(firstName) == false)
+            {
+                query = query.Where(x => x.FirstName.Contains(firstName));
+            }
+
+            if (String.IsNullOrWhiteSpace(lastName) == false)
+            {
+                query = query.Where(x => x.LastName.Contains(lastName));
+            }
+
             var pageCount = Math.Ceiling((decimal)context.Students.Count() / pageSize);
 
-            IEnumerable<GetStudentDto> students = await query.ProjectTo<GetStudentDto>(mapper.ConfigurationProvider).ToListAsync();
+            var students = await query.ProjectTo<GetStudentDto>(mapper.ConfigurationProvider)
+                .Skip((page - 1) * (int)(pageSize))
+                .Take((int)pageSize)
+                .ToListAsync();
 
-            return students;
+            return new ResponsePage<GetStudentDto> { Result = students, CurrentPage = page, Pages = (int)pageCount };
         }
 
-        public async Task UpdateStudent(UpdateStudentDto student)
+        public async Task UpdateStudent(UpdateStudentDto studentDto)
         {
-            await uof.StudentRepository.Update(mapper.Map<Student>(student));
-            await uof.Save();
+            Student student = await unitOfWork.StudentRepository.GetById(studentDto.Id);
+
+            mapper.Map(studentDto, student);
+
+            unitOfWork.StudentRepository.Update(student);
+            await unitOfWork.Save();
         }
     }
 }

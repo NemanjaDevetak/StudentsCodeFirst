@@ -10,7 +10,7 @@ namespace Application.Service
 {
     public interface ICourseService
     {
-        Task<IEnumerable<GetCourseDto>> GetCourses(int page);
+        Task<ResponsePage<GetCourseDto>> GetCourses(int page, int pageSize, string? courseName);
         Task<GetCourseDto> GetCourseById(int id);
         Task UpdateCourse(UpdateCourseDto course);
         Task AddCourse(InsertCourseDto course);

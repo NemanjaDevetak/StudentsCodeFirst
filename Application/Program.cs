@@ -17,12 +17,10 @@ IMapper mapper = config.CreateMapper();
 
 IStudentService studentService = new StudentService(mapper);
 
-UpdateStudentDto updateStudentDto = new UpdateStudentDto()
-{
-    Id = 3,
-    FirstName = "Ana",
-    LastName = "Anic",
-    Address = new AddressDto { Country = "Srbija", City = "Pancevo", ZipCode = "26000", Street = "Ulica 13" }
-};
+IEnumerable<GetStudentDto> students;
 
-await studentService.UpdateStudent(updateStudentDto);
+students = await studentService.GetStudents(1, 5, null, "Ana", null);
+
+foreach (var student in students) {
+    Console.WriteLine(student.LastName);
+}

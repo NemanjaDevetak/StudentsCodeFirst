@@ -12,48 +12,50 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Application.Infrastructure
 {
     public class CourseService : ICourseService
     {
         public readonly IMapper mapper;
-        private readonly IUnitOfWork uof;
-        ApplicationDbContext context = new ApplicationDbContext();
+        private readonly IUnitOfWork unitOfWork;
+        ApplicationDbContext context;
 
-        public CourseService(IMapper mapper)
+        public CourseService(ApplicationDbContext context, IMapper mapper, IUnitOfWork unitOfWork)
         {
+            this.context = context;
             this.mapper = mapper;
-            uof = new UnitOfWork(context);
+            this.unitOfWork = unitOfWork;
         }
         public async Task AddCourse(InsertCourseDto inserCourseDto)
         {
-            await uof.CourseRepository.Insert(mapper.Map<Course>(inserCourseDto));
-            await uof.Save();
+            await unitOfWork.CourseRepository.Insert(mapper.Map<Course>(inserCourseDto));
+            await unitOfWork.Save();
         }
 
         public async Task AddProfessor(CourseDto courseDto, ProfessorDto professorDto)
         {
-            var course = await uof.CourseRepository.GetById(courseDto.Id);
-            var professor = await uof.ProfessorRepository.GetById(professorDto.Id);
+            var course = await unitOfWork.CourseRepository.GetById(courseDto.Id);
+            var professor = await unitOfWork.ProfessorRepository.GetById(professorDto.Id);
 
-            await uof.CourseRepository.AddProfessor(course, professor);
-            await uof.Save();
+            await unitOfWork.CourseRepository.AddProfessor(course, professor);
+            await unitOfWork.Save();
         }
 
         public async Task AddStudent(CourseDto courseDto, StudentDto studentDto)
         {
-            var course = await uof.CourseRepository.GetById(courseDto.Id);
-            var student = await uof.StudentRepository.GetById(studentDto.Id);
+            var course = await unitOfWork.CourseRepository.GetById(courseDto.Id);
+            var student = await unitOfWork.StudentRepository.GetById(studentDto.Id);
 
-            await uof.CourseRepository.AddStudent(course, student);
-            await uof.Save();
+            await unitOfWork.CourseRepository.AddStudent(course, student);
+            await unitOfWork.Save();
         }
 
         public async Task DeleteCourse(int id)
         {
-            await uof.CourseRepository.Delete(id);
-            await uof.Save();
+            await unitOfWork.CourseRepository.Delete(id);
+            await unitOfWork.Save();
         }
 
         public async Task<GetCourseDto> GetCourseById(int id)
@@ -63,20 +65,28 @@ namespace Application.Infrastructure
             return course;
         }
 
-        public async Task<IEnumerable<GetCourseDto>> GetCourses(int page)
+        public async Task<ResponsePage<GetCourseDto>> GetCourses(int page, int pageSize = 20, string? courseName = null)
         {
-            var pageResults = 3f;
-            var pageCount = Math.Ceiling(context.Courses.Count() / pageResults);
+            var query = context.Courses.AsQueryable();
 
-            var courses = await context.Courses.ProjectTo<GetCourseDto>(mapper.ConfigurationProvider).ToListAsync();
+            if (String.IsNullOrWhiteSpace(courseName) == false)
+            {
+                query = query.Where(x => x.CourseName.Contains(courseName));
+            }
+            var pageCount = Math.Ceiling((decimal)context.Courses.Count() / pageSize);
 
-            return courses;
+            var courses = await query.ProjectTo<GetCourseDto>(mapper.ConfigurationProvider)
+                .Skip((page - 1) * (int)(pageSize))
+                .Take((int)pageSize)
+                .ToListAsync();
+
+            return new ResponsePage<GetCourseDto> { Result = courses, CurrentPage = page, Pages = (int)pageCount };
         }
 
         public async Task UpdateCourse(UpdateCourseDto course)
         {
-            await uof.CourseRepository.Update(mapper.Map<Course>(course));
-            await uof.Save();
+            await unitOfWork.CourseRepository.Update(mapper.Map<Course>(course));
+            await unitOfWork.Save();
         }
     }
 }

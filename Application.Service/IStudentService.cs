@@ -9,7 +9,7 @@ namespace Application.Service
 {
     public interface IStudentService
     {
-        Task<IEnumerable<GetStudentDto>> GetStudents(int page, int pageSize, int? courseId);
+        Task<ResponsePage<GetStudentDto>> GetStudents(int page, int pageSize, int? courseId, string? firstName, string? lastName);
         Task<GetStudentDto> GetStudent(int id);
         Task<GetStudentDto> GetStudent(string firstName);
         Task UpdateStudent(UpdateStudentDto student);

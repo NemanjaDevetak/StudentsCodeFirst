@@ -12,6 +12,7 @@ namespace Domain.Models
 {
     public partial class Student : Person
     {
+        public string StudentIndex { get; set; }
         public Student()
         {
             StudentCourses = new HashSet<StudentCourses>();

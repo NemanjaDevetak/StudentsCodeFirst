@@ -21,10 +21,13 @@ namespace Application.Infrastructure
             CreateMap<Department, UpdateDepartmentDto>().ReverseMap();
             CreateMap<Professor, GetProfessorDto>().ReverseMap();
             CreateMap<Professor, InsertProfessorDto>().ReverseMap();
-            CreateMap<Professor, UpdateProfessorDto>().ReverseMap();
+            CreateMap<UpdateProfessorDto, Professor>()
+                .AfterMap((src, dest) => { dest.Address = Address.CreateInstance(src.Address.Country, src.Address.City, src.Address.ZipCode, src.Address.Street); });
             CreateMap<Student, GetStudentDto>().ReverseMap();
             CreateMap<Student, InsertStudentDto>().ReverseMap();
-            CreateMap<Student, UpdateStudentDto>().ReverseMap();
+            CreateMap<UpdateStudentDto, Student>()
+                .AfterMap((src, dest) => { dest.Address = Address.CreateInstance(src.Address.Country, src.Address.City, src.Address.ZipCode, src.Address.Street); });
+
             CreateMap<AddressDto, Address>()
                 .ForCtorParam("country", opt => opt.MapFrom(src => src.Country))
                 .ForCtorParam("city", opt => opt.MapFrom(src => src.City))

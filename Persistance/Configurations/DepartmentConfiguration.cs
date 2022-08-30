@@ -14,7 +14,7 @@ namespace Persistence.Configurations
         public override void Configure(EntityTypeBuilder<Department> entity)
         {
             base.Configure(entity);
-            entity.Property(e => e.DeptartmentName).IsRequired().HasMaxLength(64);
+            entity.Property(e => e.DepartmentName).IsRequired().HasMaxLength(64);
         }
     }
 }

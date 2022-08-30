@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Application.Service
 {
-    public interface IDepartmantService
+    public interface IDepartmentService
     {
-        Task<IEnumerable<GetDepartmentDto>> GetDepartments(int page);
+        Task<ResponsePage<GetDepartmentDto>> GetDepartments(int page, int pageSize);
         Task<GetDepartmentDto> GetDepartmentById(int id);
         Task UpdateDepartment(UpdateDepartmentDto course);
         Task AddDepartment(InsertDepartmentDto course);

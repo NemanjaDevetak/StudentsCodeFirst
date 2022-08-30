@@ -3,6 +3,7 @@ using Application.Service.Dtos;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Domain.Models;
+using Domain.Service;
 using Infrastructure.Domain;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -17,24 +18,25 @@ namespace Application.Infrastructure
     public class ProfessorService : IProfessorService
     {
         public readonly IMapper mapper;
-        private readonly UnitOfWork uof;
-        ApplicationDbContext context = new ApplicationDbContext();
+        private readonly IUnitOfWork unitOfWork;
+        ApplicationDbContext context;
 
-        public ProfessorService(IMapper mapper)
+        public ProfessorService(ApplicationDbContext context, IMapper mapper, IUnitOfWork unitOfWork)
         {
+            this.context = context;
             this.mapper = mapper;
-            uof = new UnitOfWork(context);
+            this.unitOfWork = unitOfWork;
         }
         public async Task AddProfessor(InsertProfessorDto professor)
         {
-            await uof.ProfessorRepository.Insert(mapper.Map<Professor>(professor));
-            await uof.Save();
+            await unitOfWork.ProfessorRepository.Insert(mapper.Map<Professor>(professor));
+            await unitOfWork.Save();
         }
 
         public async Task DeleteProfessor(int id)
         {
-            await uof.ProfessorRepository.Delete(id);
-            await uof.Save();
+            await unitOfWork.ProfessorRepository.Delete(id);
+            await unitOfWork.Save();
         }
 
         public async Task<GetProfessorDto> GetProfessor(int id)
@@ -51,7 +53,7 @@ namespace Application.Infrastructure
             return professor;
         }
 
-        public async Task<IEnumerable<GetProfessorDto>> GetProfessors(int page, int pageSize = 20, int? courseId = null)
+        public async Task<ResponsePage<GetProfessorDto>> GetProfessors(int page, int pageSize = 20, int? courseId = null, string? firstName = null, string? lastName = null)
         {
             var query = context.Professors.AsQueryable();
 
@@ -60,17 +62,34 @@ namespace Application.Infrastructure
                 query = query.Where(x => x.CourseProfessors.Any(y => y.CourseId == courseId));
             }
 
+            if (firstName != null)
+            {
+                query = query.Where(x => x.FirstName.Contains(firstName));
+            }
+
+            if (lastName != null)
+            {
+                query = query.Where(x => x.LastName.Contains(lastName));
+            }
+
             var pageCount = Math.Ceiling((decimal)context.Professors.Count() / pageSize);
 
-            IEnumerable<GetProfessorDto> professors = await query.ProjectTo<GetProfessorDto>(mapper.ConfigurationProvider).ToListAsync();
+            var professors = await query.ProjectTo<GetProfessorDto>(mapper.ConfigurationProvider)
+                .Skip((page - 1) * (int)(pageSize))
+                .Take((int)pageSize)
+                .ToListAsync();
 
-            return professors;
+            return new ResponsePage<GetProfessorDto> { Result = professors, CurrentPage = page, Pages = (int)pageCount };
         }
 
-        public async Task UpdateProfessor(UpdateProfessorDto professor)
+        public async Task UpdateProfessor(UpdateProfessorDto professorDto)
         {
-            await uof.ProfessorRepository.Update(mapper.Map<Professor>(professor));
-            await uof.Save();
+            Professor professor = await unitOfWork.ProfessorRepository.GetById(professorDto.Id);
+
+            mapper.Map(professorDto, professor);
+
+            unitOfWork.ProfessorRepository.Update(professor);
+            await unitOfWork.Save();
         }
     }
 }
