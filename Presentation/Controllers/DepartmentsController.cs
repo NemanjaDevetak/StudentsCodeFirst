@@ -10,7 +10,7 @@ namespace Presentation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DepartmentsController : BaseController
+    public class DepartmentsController : ControllerBase
     {
         private readonly IDepartmentService departmentService;
 

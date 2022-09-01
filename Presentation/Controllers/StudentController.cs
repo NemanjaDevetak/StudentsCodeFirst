@@ -8,7 +8,7 @@ namespace Presentation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class StudentController : BaseController
+    public class StudentController : ControllerBase
     {
         private readonly IStudentService studentService;
 

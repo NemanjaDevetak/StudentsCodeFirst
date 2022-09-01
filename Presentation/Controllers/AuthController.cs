@@ -12,7 +12,7 @@ namespace Presentation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController : BaseController
+    public class AuthController : ControllerBase
     {
         public static User user = new User();
         private readonly IConfiguration configuration;

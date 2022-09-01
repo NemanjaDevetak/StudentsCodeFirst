@@ -6,7 +6,7 @@ namespace Presentation.Controllers
 {
     public abstract class BaseController : ControllerBase
     {
-        protected async Task <IActionResult> ExecuteMethod(Action action) 
+        protected async Task<IActionResult> ExecuteMethod(Action action) 
         {
             try
             {
