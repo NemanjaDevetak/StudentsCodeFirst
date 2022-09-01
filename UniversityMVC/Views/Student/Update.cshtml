@@ -1,0 +1,47 @@
+﻿@using Application.Service.Dtos
+@model UpdateStudentDto
+@{
+    ViewData["Title"] = "Update";
+}
+
+<form method="post">
+    <div class="border p-3 mt-4">
+        <div class="row pb-2">
+            <h2 class="text-primary">Update Student</h2>
+            <hr />
+        </div>
+        <div class="mb-3">
+            <label asp-for="FirstName"></label>
+            <input asp-for="FirstName" />
+            <span asp-validation-for="FirstName" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="LastName"></label>
+            <input asp-for="LastName" />
+        </div>
+        <div class="mb-3">
+            <label asp-for="StudentIndex"></label>
+            <input asp-for="StudentIndex" />
+        </div>
+        <div class="mb-3">
+            <label asp-for="Address.Country"></label>
+            <input asp-for="Address.Country" />
+        </div>
+        <div class="mb-3">
+            <label asp-for="Address.City"></label>
+            <input asp-for="Address.City" />
+        </div>
+        <div class="mb-3">
+            <label asp-for="Address.ZipCode"></label>
+            <input asp-for="Address.ZipCode" />
+        </div>
+        <div class="mb-3">
+            <label asp-for="Address.Street"></label>
+            <input asp-for="Address.Street" />
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:150px"> Update </button>
+        <a asp-controller="Student" asp-action="Index" class="btn btn-secondary" style="width:150px">
+            Back to list
+        </a>
+    </div>
+</form>

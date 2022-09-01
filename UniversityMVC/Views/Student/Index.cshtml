@@ -1,0 +1,35 @@
+﻿@using Application.Service.Dtos
+@{
+    ViewData["Title"] = "Student";
+}
+
+<div>
+    <div>
+        <div>
+            <h2>Student List</h2>
+        </div>
+        <div>
+            <a asp-controller="Student" asp-action="Create" class="btn btn-secondary" style="width:150px">
+                Create new Student
+            </a>
+        </div>
+    </div>
+</div>
+<table id="studentTable" class="display">
+    <thead>
+        <tr>
+            <th>
+                First name
+            </th>
+            <th>
+                Last name
+            </th>
+            <th>
+                 Index
+            </th>
+            <th>
+
+            </th>
+        </tr>
+    </thead>
+</table>
