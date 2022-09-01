@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using Serilog;
 
 namespace Presentation.Controllers
-{    
+{
     public abstract class BaseController : ControllerBase
     {
-        public async Task <IActionResult> ExecuteMethod(Action action) 
+        protected async Task <IActionResult> ExecuteMethod(Action action) 
         {
             try
             {

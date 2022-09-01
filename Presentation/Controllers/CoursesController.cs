@@ -9,7 +9,7 @@ namespace Presentation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CoursesController : ControllerBase
+    public class CoursesController : BaseController
     {
         private readonly ICourseService courseService;
 
@@ -19,46 +19,21 @@ namespace Presentation.Controllers
         }
 
         [HttpGet, Authorize(Roles = "Admin")]
-        public async Task<ActionResult<IEnumerable<GetCourseDto>>> Get(int page, int pageSize, string? courseName) 
+        public async Task<IActionResult> Get(int page, int pageSize, string? courseName) 
         {
-            try
-            {
-                return Ok(await courseService.GetCourses(page, pageSize, courseName));
-            }
-            catch (Exception ex)
-            {
-                Log.Fatal("Could not find the requested file", ex.Message);
-                throw new Exception("Server error");
-            }
+            return await ExecuteMethod(() => courseService.GetCourses(page, pageSize, courseName));
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<GetCourseDto>> ById(int id)
+        public async Task<IActionResult> ById(int id)
         {
-            try
-            {
-                return Ok(await courseService.GetCourseById(id));
-            }
-            catch (Exception ex)
-            {
-                Log.Fatal("Could not find the requested file.", ex.Message);
-                throw new Exception("Server error");
-            }
+            return await ExecuteMethod(() => courseService.GetCourseById(id));
         }
 
         [HttpPost]
-        public async Task<ActionResult<InsertCourseDto>> Post(InsertCourseDto insertCourseDto)
+        public async Task<IActionResult> Post(InsertCourseDto insertCourseDto)
         {
-            try
-            {
-                await courseService.AddCourse(insertCourseDto);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                Log.Fatal("Sent object {@insertCourseDto} is empty.", insertCourseDto, ex.Message);
-                throw new Exception("Server error");
-            }
+            return await ExecuteMethod(() => courseService.AddCourse(insertCourseDto));
         }
         
         [HttpPost("Professor")]
