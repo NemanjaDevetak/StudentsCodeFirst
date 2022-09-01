@@ -12,7 +12,7 @@ namespace Persistence
 {
     public partial class ApplicationDbContext : DbContext
     {
-        public ApplicationDbContext() 
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) 
         {            
         }
 
@@ -22,14 +22,6 @@ namespace Persistence
         public virtual DbSet<Professor> Professors { get; set; }
         public virtual DbSet<Student> Students { get; set; }
         public virtual DbSet<StudentCourses> StudentCourses { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlServer("Server=DESKTOP-0N88TA5;Database=Task04;Trusted_Connection=True;");
-            }
-        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
             //modelBuilder.ApplyConfigurationsFromAssembly(typeof(BaseConfiguration<>).Assembly);

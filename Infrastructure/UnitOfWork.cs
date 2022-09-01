@@ -17,7 +17,6 @@ namespace Infrastructure.Domain
             this.context = context;
         }
 
-        private ApplicationDbContext context = new ApplicationDbContext();
         private IBaseRepository<BaseEntity> baseRepository;
         private ICourseRepository courseRepository;
         private IDepartmentRepository departmentRepository;
@@ -90,6 +89,8 @@ namespace Infrastructure.Domain
         }
 
         private bool disposed = false;
+        private readonly ApplicationDbContext context;
+
         protected virtual void Dispose(bool disposing)
         {
             if (!this.disposed)

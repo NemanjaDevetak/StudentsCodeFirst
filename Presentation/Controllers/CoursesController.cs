@@ -1,5 +1,6 @@
 ﻿using Application.Service;
 using Application.Service.Dtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
@@ -17,7 +18,7 @@ namespace Presentation.Controllers
             this.courseService = courseService;
         }
 
-        [HttpGet]
+        [HttpGet, Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<GetCourseDto>>> Get(int page, int pageSize, string? courseName) 
         {
             try
