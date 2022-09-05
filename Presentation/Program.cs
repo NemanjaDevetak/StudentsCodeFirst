@@ -1,5 +1,7 @@
 using Application.Infrastructure;
 using Application.Service;
+using Domain.Infrastructure;
+using Domain.Models;
 using Domain.Service;
 using Infrastructure.Domain;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -38,6 +40,12 @@ try
     builder.Services.AddScoped<ICourseService, CourseService>();
     builder.Services.AddScoped<IStudentService, StudentService>();
     builder.Services.AddScoped<IProfessorService, ProfessorService>();
+
+    builder.Services.AddScoped<IBaseRepository<BaseEntity>, BaseRepository<BaseEntity>>();
+    builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+    builder.Services.AddScoped<ICourseRepository, CourseRepository>();
+    builder.Services.AddScoped<IStudentRepository, StudentRepository>();
+    builder.Services.AddScoped<IProfessorRepository, ProfessorRepository>();
     builder.Services.AddSwaggerGen(options => {
         options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
         {

@@ -12,76 +12,28 @@ namespace Infrastructure.Domain
 {
     public class UnitOfWork : IUnitOfWork
     {
-        public UnitOfWork(ApplicationDbContext context)
+        public UnitOfWork(
+            ApplicationDbContext context,
+            IBaseRepository<BaseEntity> baseRepository,
+            ICourseRepository courseRepository,
+            IDepartmentRepository departmentRepository,
+            IProfessorRepository professorRepository,
+            IStudentRepository studentRepository
+            )
         {
             this.context = context;
+            this.BaseRepository = baseRepository;
+            this.CourseRepository = courseRepository;
+            this.DepartmentRepository = departmentRepository;
+            this.ProfessorRepository = professorRepository;
+            this.StudentRepository = studentRepository;
         }
 
-        private IBaseRepository<BaseEntity> baseRepository;
-        private ICourseRepository courseRepository;
-        private IDepartmentRepository departmentRepository;
-        private IProfessorRepository professorRepository;
-        private IStudentRepository studentRepository;
-        public IBaseRepository<BaseEntity> BaseRepository
-        {
-            get
-            {
-
-                if (this.baseRepository == null)
-                {
-                    this.baseRepository = new BaseRepository<BaseEntity>(context);
-                }
-                return baseRepository;
-            }
-        }
-        public ICourseRepository CourseRepository
-        {
-            get
-            {
-
-                if (this.courseRepository == null)
-                {
-                    this.courseRepository = new CourseRepository(context);
-                }
-                return courseRepository;
-            }
-        }
-        public IDepartmentRepository DepartmentRepository
-        {
-            get
-            {
-
-                if (this.departmentRepository == null)
-                {
-                    this.departmentRepository = new DepartmentRepository(context);
-                }
-                return departmentRepository;
-            }
-        }
-        public IProfessorRepository ProfessorRepository
-        {
-            get
-            {
-
-                if (this.professorRepository == null)
-                {
-                    this.professorRepository = new ProfessorRepository(context);
-                }
-                return professorRepository;
-            }
-        }
-        public IStudentRepository StudentRepository
-        {
-            get
-            {
-
-                if (this.studentRepository == null)
-                {
-                    this.studentRepository = new StudentRepository(context);
-                }
-                return studentRepository;
-            }
-        }
+        public IBaseRepository<BaseEntity> BaseRepository { get;}
+        public ICourseRepository CourseRepository { get; }
+        public IDepartmentRepository DepartmentRepository { get; }
+        public IProfessorRepository ProfessorRepository { get; }
+        public IStudentRepository StudentRepository { get; }
 
         public async Task Save()
         {
@@ -89,6 +41,7 @@ namespace Infrastructure.Domain
         }
 
         private bool disposed = false;
+
         private readonly ApplicationDbContext context;
 
         protected virtual void Dispose(bool disposing)

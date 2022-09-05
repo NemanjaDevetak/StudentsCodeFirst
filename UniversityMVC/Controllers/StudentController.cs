@@ -21,7 +21,7 @@ namespace UniversityMVC.Controllers
 
         public async Task<JsonResult> Get()
         {
-            var studentList = await studentService.GetStudents(1, 10, null, null, null);
+            var studentList = await studentService.GetStudents(1, 20, null, null, null);
             return Json(new { data = studentList.Result });
         }
 
